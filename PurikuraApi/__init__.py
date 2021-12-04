@@ -5,7 +5,10 @@ import base64
 import numpy as np
 
 import azure.functions as func
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
+connect_str = "DefaultEndpointsProtocol=https;AccountName=onlinepurikuraapi;AccountKey=vdbQ9QZt7wPk4MtSav6u5vd5tVALcUTpNL0vQFklh8tg/PUmw5krxQ6i2nLHBCIRa3bsnJqHJ+t82jzZe2bH4Q==;EndpointSuffix=core.windows.net"
+container_name = "haarcascade"
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request. Purikura')
@@ -59,9 +62,19 @@ def cv_to_base64(img):
     return img_str
 
 def convert_purikura(src):
-    face_cascade_path = './haarcascade_frontalface_default.xml'
-    eye_cascade_path = './haarcascade_eye.xml'
-
+    logging.info('aaaaa')
+    # blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+    # container_client = blob_service_client.get_container_client(container_name)
+    # blob_list = container_client.list_blobs()
+    # for blob in blob_list:
+    #     print("\t" + blob.name)
+    
+    # face_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_frontalface_default.xml").download_blob()
+    # eye_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_eye.xml").download_blob()
+    face_cascade_path = "https://onlinepurikuraapi.blob.core.windows.net/haarcascade/haarcascade_frontalface_default.xml"
+    eye_cascade_path = "https://onlinepurikuraapi.blob.core.windows.net/haarcascade/haarcascade_eye.xml"
+    
+    logging.info('bbbb')
     face_cascade = cv2.CascadeClassifier(face_cascade_path)
     eye_cascade = cv2.CascadeClassifier(eye_cascade_path)
 
