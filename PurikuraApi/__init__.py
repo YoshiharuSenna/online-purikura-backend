@@ -1,4 +1,5 @@
 import logging
+import json
 
 import azure.functions as func
 
@@ -6,19 +7,34 @@ import azure.functions as func
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    name = req.params.get('name')
-    if not name:
+    image = req.params.get('image')
+    if not image:
         try:
             req_body = req.get_json()
         except ValueError:
             pass
         else:
-            name = req_body.get('name')
+            image = req_body.get('image')
+    
+    style = req.params.get('style')
+    if not style:
+        try:
+            req_body = req.get_json()
+        except ValueError:
+            pass
+        else:
+            style = req_body.get('style')
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    # ここに処理を記述
+    # 以下の"image"部分はレスポンスで返す変数に置き換えて使用してください
+    if image:
+        return func.HttpResponse(
+            json.dumps({
+            'image': image
+            }) 
+        )
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             "no image",
              status_code=200
         )
