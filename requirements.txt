@@ -4,3 +4,10 @@
 
 azure-functions
 azure-storage-blob==12.9.0
+tensorflow==2.1.0
+tf-bodypix
+tfjs-graph-converter
+numpy
+Pillow
+opencv-python
+opencv-contrib-python
