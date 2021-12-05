@@ -71,8 +71,8 @@ def convert_purikura(src):
     
     # face_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_frontalface_default.xml").download_blob()
     # eye_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_eye.xml").download_blob()
-    face_cascade_path = "https://onlinepurikuraapi.blob.core.windows.net/haarcascade/haarcascade_frontalface_default.xml"
-    eye_cascade_path = "https://onlinepurikuraapi.blob.core.windows.net/haarcascade/haarcascade_eye.xml"
+    face_cascade_path = "./haarcascade_frontalface_default.xml"
+    eye_cascade_path = "./haarcascade_eye.xml"
     
     logging.info('bbbb')
     face_cascade = cv2.CascadeClassifier(face_cascade_path)
