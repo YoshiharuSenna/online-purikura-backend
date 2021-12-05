@@ -7,8 +7,8 @@ import numpy as np
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
-connect_str = "DefaultEndpointsProtocol=https;AccountName=onlinepurikuraapi;AccountKey=vdbQ9QZt7wPk4MtSav6u5vd5tVALcUTpNL0vQFklh8tg/PUmw5krxQ6i2nLHBCIRa3bsnJqHJ+t82jzZe2bH4Q==;EndpointSuffix=core.windows.net"
-container_name = "haarcascade"
+CNNECT_STR = "DefaultEndpointsProtocol=https;AccountName=onlinepurikuraapi;AccountKey=vdbQ9QZt7wPk4MtSav6u5vd5tVALcUTpNL0vQFklh8tg/PUmw5krxQ6i2nLHBCIRa3bsnJqHJ+t82jzZe2bH4Q==;EndpointSuffix=core.windows.net"
+CONTAINER_NAME = "haarcascade"
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request. Purikura')
@@ -61,22 +61,25 @@ def cv_to_base64(img):
 
     return img_str
 
+def get_cascade_file(file_name):
+    container_client = BlobServiceClient.from_connection_string(CNNECT_STR).get_container_client(CONTAINER_NAME)
+    blob_client = container_client.get_blob_client(blob=file_name)
+    return blob_client.download_blob().readall()
+
 def convert_purikura(src):
     logging.info('aaaaa')
-    # blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-    # container_client = blob_service_client.get_container_client(container_name)
-    # blob_list = container_client.list_blobs()
-    # for blob in blob_list:
-    #     print("\t" + blob.name)
     
     # face_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_frontalface_default.xml").download_blob()
     # eye_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_eye.xml").download_blob()
     face_cascade_path = "./haarcascade_frontalface_default.xml"
     eye_cascade_path = "./haarcascade_eye.xml"
+
+    # get_cascade_file("haarcascade_frontalface_default.xml")
+    # get_cascade_file("haarcascade_eye.xml")
     
     logging.info('bbbb')
-    face_cascade = cv2.CascadeClassifier(face_cascade_path)
-    eye_cascade = cv2.CascadeClassifier(eye_cascade_path)
+    face_cascade = cv2.CascadeClassifier(get_cascade_file("haarcascade_frontalface_default.xml"))
+    eye_cascade = cv2.CascadeClassifier(get_cascade_file("haarcascade_eye.xml"))
 
     src_gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
 
