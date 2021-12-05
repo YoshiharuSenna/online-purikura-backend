@@ -4,7 +4,7 @@ import json
 import azure.functions as func
 from azure.storage.blob import BlobServiceClient
 
-CNNECT_STR='DefaultEndpointsProtocol=https;AccountName=onlinepurikuraapi;AccountKey=vdbQ9QZt7wPk4MtSav6u5vd5tVALcUTpNL0vQFklh8tg/PUmw5krxQ6i2nLHBCIRa3bsnJqHJ+t82jzZe2bH4Q==;EndpointSuffix=core.windows.net'
+CNNECT_STR='DefaultEndpointsProtocol=https;AccountName=onlinepurikuraapiv2;AccountKey=yE2SceVOOae3GSwX/6Y/OcF6sPg2LnvW/RoXuOCq+uVsWkkTpx3rnd63z897ZjlcfXnRuDo4YG0hkLAM0gJO5g==;EndpointSuffix=core.windows.net'
 CONTAINER_NAME='background-image'
 
 def getBackgroundImage(style):
