@@ -34,7 +34,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # ここに処理を記述
     # 以下の"image"部分はレスポンスで返す変数に置き換えて使用してください
     if image:
-        src = Base64ToNdarry(image)
+        src = Base64ToImg(image)
         convert_image = convert_purikura(src)
         base64image = cv_to_base64(convert_image)
         return func.HttpResponse(
@@ -48,12 +48,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
              status_code=200
         )
 
-def Base64ToNdarry(img_base64):
-    img_data = base64.b64decode(img_base64)
-    img_np = np.fromstring(img_data, np.uint8)
-    src = cv2.imdecode(img_np, cv2.IMREAD_ANYCOLOR)
-
-    return src
+def Base64ToImg(img_base64):
+    img_binary = base64.b64decode(img_base64)
+    jpg=np.frombuffer(img_binary,dtype=np.uint8)
+    img = cv2.imdecode(jpg, cv2.IMREAD_COLOR)
+    return img
 
 def cv_to_base64(img):
     _, encoded = cv2.imencode(".jpg", img)
@@ -71,16 +70,17 @@ def convert_purikura(src):
     
     # face_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_frontalface_default.xml").download_blob()
     # eye_cascade_path = blob_service_client.get_blob_client(container_name,"haarcascade_eye.xml").download_blob()
-    face_cascade_path = "./haarcascade_frontalface_default.xml"
-    eye_cascade_path = "./haarcascade_eye.xml"
+    face_cascade_path = './haarcascade_frontalface_default.xml'
+    eye_cascade_path = './haarcascade_eye.xml'
 
     # get_cascade_file("haarcascade_frontalface_default.xml")
     # get_cascade_file("haarcascade_eye.xml")
     
     logging.info('bbbb')
-    face_cascade = cv2.CascadeClassifier(get_cascade_file("haarcascade_frontalface_default.xml"))
-    eye_cascade = cv2.CascadeClassifier(get_cascade_file("haarcascade_eye.xml"))
+    face_cascade = cv2.CascadeClassifier(face_cascade_path)
+    eye_cascade = cv2.CascadeClassifier(eye_cascade_path)
 
+    # src = cv2.imread('./a.jpg')
     src_gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
 
     faces = face_cascade.detectMultiScale(src_gray)
